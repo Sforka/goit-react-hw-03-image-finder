@@ -38,7 +38,6 @@ export class App extends Component {
               }))
             );
           });
-          console.log(this.state.images);
         })
         .catch(error => this.setState({ error }))
         .finally(this.setState({ loading: false }));
