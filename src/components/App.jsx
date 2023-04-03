@@ -6,6 +6,8 @@ import FetchImages from 'services/Api';
 import Loader from './Loader/Loader';
 import Modal from 'components/Modal/Modal';
 import css from 'components/App.module.css';
+ import { ToastContainer, toast } from 'react-toastify';
+ import 'react-toastify/dist/ReactToastify.css';
 
 export class App extends Component {
   state = {
@@ -32,7 +34,7 @@ export class App extends Component {
           console.log(res.data);
           this.setState({ hits: res.data.hits.length });
           if (res.data.total === 0) {
-            return alert('No hits found please enter another query');
+            return toast.warn('No hits found please enter another query');
           }
           res.data.hits.map(({ id, webformatURL, largeImageURL, tags }) => {
             return (
@@ -44,19 +46,20 @@ export class App extends Component {
           });
         })
         .catch(error => this.setState({ error }))
-        .finally(this.setState({ loading: false, }));
+        .finally(this.setState({ loading: false }));
     }
-    
   }
 
   searchSubmit = inputValue => {
     if (inputValue === this.state.inputValue) {
-      return alert('This request has already been found, please try another quary');
+      return toast.warn(
+        'This request has already been found, please try another quary'
+      );
     }
     this.setState({
       inputValue,
       page: 1,
-      images:[]
+      images: [],
     });
   };
 
@@ -81,10 +84,14 @@ export class App extends Component {
         <SearchBar onSubmit={this.searchSubmit} />
         <ImageGallery images={this.state.images} openModal={this.openModal} />
         {this.state.showModal && (
-          <Modal toggleModal={this.toggleModal} largeImage={this.state.largeImage} />
+          <Modal
+            toggleModal={this.toggleModal}
+            largeImage={this.state.largeImage}
+          />
         )}
         {this.state.loading && <Loader />}
         {this.state.hits >= 12 && <Button nextPage={this.nextPage} />}
+        <ToastContainer />
       </div>
     );
   }
