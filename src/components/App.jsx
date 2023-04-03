@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { SearchBar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
-import FetchImages from './services/Api';
+import FetchImages from 'services/Api';
 import Loader from './Loader/Loader';
 import Modal from 'components/Modal/Modal';
 import css from 'components/App.module.css';
@@ -29,7 +29,11 @@ export class App extends Component {
       const response = FetchImages(this.state.inputValue, this.state.page);
       response
         .then(res => {
+          console.log(res.data);
           this.setState({ hits: res.data.hits.length });
+          if (res.data.total === 0) {
+            return alert('No hits found please enter another query');
+          }
           res.data.hits.map(({ id, webformatURL, largeImageURL, tags }) => {
             return (
               !images.some(image => image.id === id) &&
@@ -40,11 +44,15 @@ export class App extends Component {
           });
         })
         .catch(error => this.setState({ error }))
-        .finally(this.setState({ loading: false }));
+        .finally(this.setState({ loading: false, }));
     }
+    
   }
 
   searchSubmit = inputValue => {
+    if (inputValue === this.state.inputValue) {
+      return alert('This request has already been found, please try another quary');
+    }
     this.setState({
       inputValue,
       page: 1,

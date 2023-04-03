@@ -9,17 +9,17 @@ export class SearchBar extends Component {
   valueChange = e => {
     this.setState({ search: e.currentTarget.value.toLowerCase() });
     };
-    
+ 
     handleSubmit = event => {
-        event.preventDefault();
+      event.preventDefault();
+       
         if (this.state.search.trim() === "") {
             alert('write correct name');
             return
         }
             this.props.onSubmit(this.state.search)
-            this.setState({ search: '' })
-        
-    }
+  }
+  
   render() {
     return (
       <header className={css.Searchbar}>
